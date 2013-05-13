@@ -38,6 +38,9 @@
             (setExample))
           ((string=? token "analyze")
             (analyze))
+          ((string=? token "tst")
+            (my-display "tst")
+            (my-newline))
           ((string=? token "plies")
             (set! plys (read-token))) ; ???? check for number
           ((string=? token "new")

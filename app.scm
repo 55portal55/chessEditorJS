@@ -151,17 +151,39 @@
   (gotoMove (- (length move-log) 1))
   (updateDisplay))
 
+(define (move-log->moves move-log)
+  (if (null? move-log)
+    '()
+    (let
+      ((move (car move-log)))
+      (let
+        ((sourcex (vector-ref move 6))
+         (sourcey (vector-ref move 7))
+         (destx (vector-ref move 8))
+         (desty (vector-ref move 9)))
+        (cons
+          (list sourcex sourcey destx desty)
+          (move-log->moves (cdr move-log)))))))
+
 (define (analyze)
   (let
-    ((move (copy-move move)))
-    (vector-set! move 1 (opposite-color (vector-ref move 1))) ; color
-    (updateDisplayAnalyze
-      (alpha-beta
-         move
-         (list 0 0 0 0 0) ; null move
-         INFINITY
-         (- INFINITY)
-       0)))) ; depth. start at 0
+    ((line (cdr (move-log->moves move-log))))
+    (let
+      ((book-move (btree-find-line book
+        (btree-make-line (btree-make-node (list 0 0 0 0)) line))))
+      (if (not (null? book-move))
+        (updateDisplayAnalyze (list 0 (list (cons 0 book-move))))
+        ; out of the book. let analysis begin
+        (let
+          ((move (copy-move move)))
+          (vector-set! move 1 (opposite-color (vector-ref move 1))) ; color
+          (updateDisplayAnalyze
+            (alpha-beta
+               move
+               (list 0 0 0 0 0) ; null move
+               INFINITY
+               (- INFINITY)
+             0))))))) ; depth. start at 0
 
 (define (fen2pgn moves move-number move-idx)
   (if (< (length moves) 2)
