@@ -332,7 +332,7 @@
                         (idx->y i))
                   child-move-list))))
       (let
-        ((lst (bubble-sort 
+        ((lst (merge-sort 
       ; ((lst (dummy-2 
                 (filt-attacks move 
                   (remove-checks child-move-list move color)
