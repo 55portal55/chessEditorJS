@@ -1,3 +1,6 @@
+
+;;; Author: Rick Miskowski - www.richardmiskowski.com
+
 (define (pawn-move board enpassant-target
   cell-lists sourcex sourcey piece-color)
   (if (white? piece-color)

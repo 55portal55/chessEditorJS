@@ -1,5 +1,7 @@
 ;;; the Schematic chess engine
 
+;;; Author: Rick Miskowski - www.richardmiskowski.com
+
 ;;; nobody said efficiency was the number one concern
 
 (define INFINITY 100000000)
