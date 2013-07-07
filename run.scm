@@ -47,4 +47,5 @@
             (setNew)))
         (run)))))
 
+(setNew)
 (run)

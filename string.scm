@@ -11,3 +11,7 @@
 
 (define (my-string-ref s idx)
   (vector-ref s idx))
+
+(define (my-string=? s1 s2)
+  (string=? (list->string (vector->list s1))
+            (list->string (vector->list s2))))

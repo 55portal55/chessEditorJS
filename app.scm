@@ -1,9 +1,11 @@
+(define initial-board-position
+  (my-make-string
+    "rnbqkbnrpppppppp................................PPPPPPPPRNBQKBNR"))
+
 (define (init-move)
   (let
     ((move (make-vector 11)))
-    (vector-set! move 0
-      (my-make-string
-        "rnbqkbnrpppppppp................................PPPPPPPPRNBQKBNR"))
+    (vector-set! move 0 initial-board-position)
     (vector-set! move 1 #\W)
     (vector-set! move 2 (my-make-string "KQkq"))
     (vector-set! move 3 (my-make-string ".."))
@@ -121,11 +123,10 @@
   (updateDisplay))
 
 (define (setExample)
-  (display-example)
   (cond
     ((eq? example example1)
       (set! example example2)
-      (set-plys 4))
+      (set-plys 6))
     ((eq? example example2)
       (set! example example3)
       (set-plys 6))
@@ -137,19 +138,18 @@
       (set-plys 6))
     ((eq? example example5)
       (set! example example6)
-      (set-plys 6))
+      (set-plys 8))
     ((eq? example example6)
       (set! example example7)
-      (set-plys 8))
+      (set-plys 6))
     ((eq? example example7)
       (set! example example1)
-      (set-plys 6))))
+      (set-plys 4)))
+  (display-example))
 
 (define (setNew)
-  (set! example example1)
-  (set! move-log (clone-example example))
-  (gotoMove (- (length move-log) 1))
-  (updateDisplay))
+  (set! example example7)
+  (setExample))
 
 (define (move-log->moves move-log)
   (if (null? move-log)
@@ -165,13 +165,18 @@
           (list sourcex sourcey destx desty)
           (move-log->moves (cdr move-log)))))))
 
+(define (game-has-initial-starting-position move-log)
+  (my-string=? (vector-ref (list-ref move-log 0) 0)
+               initial-board-position))
+
 (define (analyze)
   (let
     ((line (cdr (move-log->moves move-log))))
     (let
       ((book-move (btree-find-line book
         (btree-make-line (btree-make-node (list 0 0 0 0)) line))))
-      (if (not (null? book-move))
+      (if (and (not (null? book-move))
+               (game-has-initial-starting-position move-log))
         (updateDisplayAnalyze (list 0 (list (cons 0 book-move))))
         ; out of the book. let analysis begin
         (let
